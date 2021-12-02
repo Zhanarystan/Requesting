@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Requesting.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Requesting.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<Client>
     {
         public DataContext(DbContextOptions options) : base(options)
         {
@@ -18,10 +19,10 @@ namespace Requesting.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Client>()
-                .HasOne(c => c.Request)
-                .WithOne(r => r.Client)
-                .HasForeignKey<Request>(r => r.ClientId);
+                .HasMany(c => c.Requests)
+                .WithOne(r => r.Client);
         }
     }
 }

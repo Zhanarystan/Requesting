@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Requesting.Interfaces
 {
-    public interface IClientRepository
+    public interface IUserRepository
     {
-        Task<IEnumerable<Client>> GetClients();
-        Task<int> CreateClient(Client client);
+        Task<Client> GetCurrentUser();
     }
 }

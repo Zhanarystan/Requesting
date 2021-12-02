@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Requesting.Data;
@@ -9,9 +10,10 @@ using Requesting.Data;
 namespace Requesting.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211202175838_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,7 +239,8 @@ namespace Requesting.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientId")
+                        .IsUnique();
 
                     b.ToTable("Requests");
                 });
@@ -296,15 +299,15 @@ namespace Requesting.Migrations
             modelBuilder.Entity("Requesting.Models.Request", b =>
                 {
                     b.HasOne("Requesting.Models.Client", "Client")
-                        .WithMany("Requests")
-                        .HasForeignKey("ClientId");
+                        .WithOne("Request")
+                        .HasForeignKey("Requesting.Models.Request", "ClientId");
 
                     b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Requesting.Models.Client", b =>
                 {
-                    b.Navigation("Requests");
+                    b.Navigation("Request");
                 });
 #pragma warning restore 612, 618
         }

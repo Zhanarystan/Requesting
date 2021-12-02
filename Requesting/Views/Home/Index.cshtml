@@ -7,34 +7,41 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 
-    <a class="btn btn-primary" asp-controller="Home" asp-action="CreateClient">Create Request</a>
 </div>
 
 <div class="container">
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <td scope="col">Id</td>
-                <td scope="col">Request Code</td>
-                <td scope="col">Description</td>
-                <td scope="col">Status</td>
-                <td scope="col">Client</td>
-                <td scope="col">Details</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var request in Model)
-            {
+    @if(Model != null)
+    {
+        <a class="btn btn-primary" asp-controller="Home" asp-action="CreateRequest">Create Request</a>
+        <br />
+        <br />
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <td scope="col">Id</td>
+                    <td scope="col">Request Code</td>
+                    <td scope="col">Description</td>
+                    <td scope="col">Status</td>
+                    <td scope="col">Details</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => request.Id)</td>
                     <td>@Html.DisplayFor(modelItem => request.Code)</td>
                     <td>@Html.DisplayFor(modelItem => request.Description)</td>
                     <td>@Html.DisplayFor(modelItem => request.Status)</td>
-                    <td>@Html.DisplayFor(modelItem => request.Client.FullName)</td>
-                    <td><a  href="/Home/GetRequest/@request.Id">Details</a></td>
+                    <td><a href="/Home/GetRequest/@request.Id">Details</a></td>
                 </tr>
-            }
-        </tbody>
-    </table>
-        
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h2>Request Not Found</h2>
+    }
+
 </div>

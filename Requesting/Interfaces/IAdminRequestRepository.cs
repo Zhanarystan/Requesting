@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Requesting.Interfaces
 {
-    public interface IRequestRepository
+    public interface IAdminRequestRepository
     {
-        Task<bool> CreateRequest(Request request);
         Task<IEnumerable<Request>> GetRequests();
         Task<Request> GetRequest(int id);
+        Task<bool> UpdateRequest(Request request);
         Task<bool> DeleteRequest(int id);
-
     }
 }

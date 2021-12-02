@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Requesting.Interfaces;
 using Requesting.Models;
@@ -12,45 +13,32 @@ namespace Requesting.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IClientRepository _clientRepository;
         private readonly IRequestRepository _requestRepository;
 
-        public HomeController(IClientRepository clientRepository, IRequestRepository requestRepository)
+        public HomeController(IRequestRepository requestRepository)
         {
-            _clientRepository = clientRepository;
             _requestRepository = requestRepository;
         }
 
         public async Task<ActionResult> Index()
         {
-
-            return View(await _requestRepository.GetAllRequests());
+            var requests = await _requestRepository.GetRequests();
+            
+            return View(requests);
         }
 
+        
         [HttpGet]
-        public IActionResult CreateClient()
+        public IActionResult CreateRequest()
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult CreateRequest(int clientId)
-        {
-            ViewBag.ClientId = clientId;
-            return View();
-        }
-
-        [HttpGet]
+        [Authorize(Roles = "user")]
         public async Task<ActionResult> GetRequest(int id)
         {
             return View(await _requestRepository.GetRequest(id));
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> EditRequest(Request request)
-        {
-            _requestRepository.UpdateRequest(request);
-            return RedirectToAction("Index");
         }
 
 
@@ -67,12 +55,6 @@ namespace Requesting.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async Task<ActionResult> CreateClient(Client client)
-        {
-            var clientId = await _clientRepository.CreateClient(client);
-            return RedirectToAction("CreateRequest", new { clientId });
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
